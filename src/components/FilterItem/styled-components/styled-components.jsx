@@ -26,6 +26,11 @@ const FilterLabel = styled.label`
   }
   &:focus {
     background: #f1fcff;
+    .checkbox {
+      &::after {
+        border: 1px solid red;
+      }
+    }
   }
   &:active {
     background: #f1fcff;
@@ -35,7 +40,7 @@ const FilterLabel = styled.label`
     opacity: 0;
     position: absolute;
     z-index: -1;
-    :checked {
+    &:checked {
       + .checkbox {
         &::before {
           content: '';

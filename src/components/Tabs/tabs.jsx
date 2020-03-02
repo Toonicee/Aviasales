@@ -1,21 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { TabsButton, Span } from './styled-components/styled-components';
+import TabsButton from './styled-components/styled-components';
 
 class Tabs extends React.Component {
   constructor() {
     super();
     this.state = {
-      active: false,
+      active: 'cheapest',
     };
   }
 
-  active = () => {
-    const { sortDescending } = this.props;
-    this.setState({
-      active: true,
-    });
-    sortDescending();
+  isActive = ({ target }) => {
+    this.setState({ active: target.name });
   };
 
   render() {
@@ -23,15 +20,38 @@ class Tabs extends React.Component {
     const { active } = this.state;
     return (
       <div className="tabs-wrapper">
-        <TabsButton type="button" onClick={this.active} active={active}>
-          <Span>самый дешевый</Span>
+        <TabsButton
+          name="cheapest"
+          onClick={e => {
+            sortDescending();
+            this.isActive(e);
+          }}
+          active={active === 'cheapest'}
+        >
+          самый дешевый
         </TabsButton>
-        <TabsButton onClick={() => sortByAscending()} active={active}>
-          <Span>самый дорогой</Span>
+        <TabsButton
+          name="dearest"
+          onClick={e => {
+            sortByAscending();
+            this.isActive(e);
+          }}
+          active={active === 'dearest'}
+        >
+          самый дорогой
         </TabsButton>
       </div>
     );
   }
 }
+Tabs.defaultProps = {
+  sortDescending: () => {},
+  sortByAscending: () => {},
+};
+
+Tabs.propTypes = {
+  sortDescending: PropTypes.func,
+  sortByAscending: PropTypes.func,
+};
 
 export default Tabs;
