@@ -20,7 +20,7 @@ const TicketSegment = ({ segments }) => {
   };
 
   return segments.map(({ origin, destination, date, duration, stops }) => {
-    const carr = stops.reduce((acc, item) => `${item}, ${acc}`, '');
+    const carr = stops.reduce((acc, item) => `${item} ${acc}`, '');
     const h = Math.floor(duration / 60);
     const min = duration - h * 60;
     const newdate = new Date(date);
