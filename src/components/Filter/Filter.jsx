@@ -4,33 +4,33 @@ import FilterItem from '../FilterItem';
 
 import { FilterWrapper, FilterTitle, FilterList } from './styled-component/styled-component';
 
-const Filter = ({ arrNameLabel, transferChange, filterTransfer }) => {
+const Filter = ({ filterItems, transferChange, filterAllTickets }) => {
   Filter.defaultProps = {
     transferChange: () => {},
-    filterTransfer: () => {},
-    arrNameLabel: [],
+    filterAllTickets: () => {},
+    filterItems: [],
   };
 
   Filter.propTypes = {
     transferChange: PropTypes.func,
-    filterTransfer: PropTypes.func,
-    arrNameLabel: PropTypes.instanceOf(Array),
+    filterAllTickets: PropTypes.func,
+    filterItems: PropTypes.instanceOf(Array),
   };
   return (
     <FilterWrapper className="filters__item filter">
       <FilterTitle>Количество пересадок</FilterTitle>
-      <div className="filter__content">
-        <div className="filter__controls checkboxes-list">
+      <div>
+        <div>
           <FilterList>
-            {arrNameLabel.map(({ label, id, checked, inputValue }, index) => (
+            {filterItems.map(({ label, id, checked, inputValue }, index) => (
               <li key={id}>
                 <FilterItem
                   label={label}
                   checked={checked}
                   index={index}
                   inputValue={inputValue}
-                  onchange={transferChange}
-                  filterTransfer={filterTransfer}
+                  transferChange={transferChange}
+                  filterAllTickets={filterAllTickets}
                 />
               </li>
             ))}

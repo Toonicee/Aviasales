@@ -7,7 +7,7 @@ class Tabs extends React.Component {
   constructor() {
     super();
     this.state = {
-      active: 'cheapest',
+      active: null,
     };
   }
 
@@ -16,14 +16,14 @@ class Tabs extends React.Component {
   };
 
   render() {
-    const { sortDescending, sortByAscending } = this.props;
+    const { sortAllTickets } = this.props;
     const { active } = this.state;
     return (
       <div className="tabs-wrapper">
         <TabsButton
           name="cheapest"
           onClick={e => {
-            sortDescending();
+            sortAllTickets(e);
             this.isActive(e);
           }}
           active={active === 'cheapest'}
@@ -31,27 +31,25 @@ class Tabs extends React.Component {
           самый дешевый
         </TabsButton>
         <TabsButton
-          name="dearest"
+          name="fastest"
           onClick={e => {
-            sortByAscending();
+            sortAllTickets(e);
             this.isActive(e);
           }}
-          active={active === 'dearest'}
+          active={active === 'fastest'}
         >
-          самый дорогой
+          самый быстрый
         </TabsButton>
       </div>
     );
   }
 }
 Tabs.defaultProps = {
-  sortDescending: () => {},
-  sortByAscending: () => {},
+  sortAllTickets: () => {},
 };
 
 Tabs.propTypes = {
-  sortDescending: PropTypes.func,
-  sortByAscending: PropTypes.func,
+  sortAllTickets: PropTypes.func,
 };
 
 export default Tabs;

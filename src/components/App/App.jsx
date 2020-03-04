@@ -4,22 +4,22 @@ import Filter from '../Filter';
 import Tabs from '../Tabs';
 import Ticket from '../Ticket';
 import Loading from '../Loading';
-import { sortingArray } from '../../helper/index';
-import Servisec from '../../servicec/servisec';
+import ticketSorting from '../../helper/ticketSorting';
+import Services from '../../services/services';
 import { GlobalStyle, AppWrapper } from './styled-components/styled-componets';
 
 import logo from '../../img/Logo.svg';
 
 class App extends React.Component {
-  inicialState = [
+  initialStateLabel = [
     { label: 'Все', id: 'all', inputValue: 0, checked: true },
-    { label: 'Без пересадок', id: 'non-stop', inputValue: 1, checked: false },
-    { label: '1 персадка', id: '1-trasplant', inputValue: 2, checked: false },
-    { label: '2 пересадки', id: '2-transplant', inputValue: 3, checked: false },
-    { label: '3 пересадки', id: '3-transplant', inputValue: 4, checked: false },
+    { label: 'Без пересадок', id: 'non-stop', inputValue: 1, checked: true },
+    { label: '1 персадка', id: '1-transplant', inputValue: 2, checked: true },
+    { label: '2 пересадки', id: '2-transplant', inputValue: 3, checked: true },
+    { label: '3 пересадки', id: '3-transplant', inputValue: 4, checked: true },
   ];
 
-  servisec = new Servisec();
+  services = new Services();
 
   constructor() {
     super();
@@ -27,87 +27,92 @@ class App extends React.Component {
       ticketsAll: [],
       ticketId: null,
       loading: true,
-      arrNameLabel: [...this.inicialState],
+      filterItems: [...this.initialStateLabel],
     };
   }
 
   componentDidMount() {
-    this.servisec.getTicketsId().then(({ data }) => this.setState({ ticketId: data.searchId }));
+    this.services.getTicketsId().then(({ data }) => this.setState({ ticketId: data.searchId }));
     this.tickets();
   }
 
-  changeTransferHandler = index => {
-    const { arrNameLabel } = this.state;
-
-    arrNameLabel.forEach((item, num) => {
+  changeTransferHandler = (index, inputValue) => {
+    const { filterItems } = this.state;
+    filterItems.forEach((item, num) => {
+      if (filterItems[0].checked) {
+        filterItems[num].checked = true;
+      }
       if (num === index) {
-        arrNameLabel[num].checked = !arrNameLabel[num].checked;
+        filterItems[num].checked = !filterItems[num].checked;
+      }
+      if (!filterItems[0].checked && inputValue === 0) {
+        filterItems[num].checked = false;
+      }
+      if (!filterItems[num].checked) {
+        filterItems[0].checked = false;
       }
     });
-
-    this.setState({ arrNameLabel });
+    const label = filterItems.filter(({ checked }) => checked);
+    if (label.length === 4) {
+      filterItems[0].checked = true;
+    }
+    this.setState({ filterItems });
   };
 
   tickets = () => {
     const { ticketId } = this.state;
-    this.servisec
+    this.services
       .getAllTickets(ticketId)
       .then(res => {
-        if (!res.data.stop) {
-          const { tickets } = res.data;
-          const { ticketsAll } = this.state;
-          this.setState({
-            ticketsAll: [...ticketsAll, ...tickets],
-            loading: false,
-          });
-          this.tickets();
+        if (res.data.stop) {
+          return;
         }
+        const { tickets } = res.data;
+        const { ticketsAll } = this.state;
+        this.setState({
+          ticketsAll: [...ticketsAll, ...tickets],
+          loading: false,
+        });
+        this.tickets();
       })
       .catch(() => this.tickets());
   };
 
-  filterTicketsHandler = () => {
-    const { ticketsAll, arrNameLabel } = this.state;
-    if (arrNameLabel[0].checked) {
+  filterAllTickets = () => {
+    const { ticketsAll, filterItems } = this.state;
+    if (filterItems[0].checked) {
       return ticketsAll;
     }
     const filteredTicketsList = ticketsAll.filter(
-      ticket => arrNameLabel[ticket.segments[0].stops.length + 1].checked
+      ticket => filterItems[ticket.segments[0].stops.length + 1].checked
     );
     return filteredTicketsList;
   };
 
-  sortDescending = () => {
+  sortAllTickets = ({ target: { name } }) => {
     const { ticketsAll } = this.state;
-    const tickets = sortingArray(ticketsAll, 'descending');
-    this.setState({ ticketsAll: tickets });
-  };
-
-  sortByAscending = () => {
-    const { ticketsAll } = this.state;
-    const tickets = sortingArray(ticketsAll, 'ascending');
+    const tickets = ticketSorting(ticketsAll, name);
     this.setState({ ticketsAll: tickets });
   };
 
   render() {
-    const { loading, arrNameLabel } = this.state;
-    const allTickets = this.filterTicketsHandler();
+    const { loading, filterItems } = this.state;
     return (
       <AppWrapper>
         <GlobalStyle />
-        <div key={1} className="header__logo">
-          <img src={logo} alt="Логотип" />
+        <div className="header__logo">
+          <img src={logo} alt="логотип" />
         </div>
-        <div key={2} className="sidebar">
+        <div className="sidebar">
           <Filter
-            filterTransfer={this.filterTicketsHandler}
+            filterAllTickets={this.filterAllTickets}
             transferChange={this.changeTransferHandler}
-            arrNameLabel={arrNameLabel}
+            filterItems={filterItems}
           />
         </div>
-        <div key={3} className="main">
-          <Tabs sortDescending={this.sortDescending} sortByAscending={this.sortByAscending} />
-          {loading ? <Loading /> : <Ticket tickets={allTickets} />}
+        <div className="main">
+          <Tabs sortAllTickets={this.sortAllTickets} />
+          {loading ? <Loading /> : <Ticket tickets={this.filterAllTickets} />}
         </div>
       </AppWrapper>
     );

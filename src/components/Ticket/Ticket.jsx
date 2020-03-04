@@ -2,7 +2,7 @@ import React from 'react';
 import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
 
-import { prettify } from '../../helper';
+import formattingPrices from '../../helper/formattingPrices';
 import TicketSegment from '../TicketSegment';
 import {
   TicketWrapper,
@@ -13,26 +13,25 @@ import {
 
 const Ticket = ({ tickets }) => {
   Ticket.defaultProps = {
-    tickets: [],
+    tickets: () => {},
   };
 
   Ticket.propTypes = {
-    tickets: PropTypes.instanceOf(Array),
+    tickets: PropTypes.func,
   };
   let count = 0;
   return (
     <>
-      {tickets.map(({ price, carrier, segments }) => {
+      {tickets().map(({ price, carrier, segments }) => {
         count += 1;
         if (count > 5) {
           return null;
         }
-
         return (
           <TicketWrapper key={uniqueId()}>
             <TicketHeader>
               <TicketPrice>
-                <span>{`${prettify(price)} Р`}</span>
+                <span>{`${formattingPrices(price)} Р`}</span>
               </TicketPrice>
               <div className="ticket-preview__carriers">
                 <TicketCarrier>
@@ -41,7 +40,7 @@ const Ticket = ({ tickets }) => {
                     src={`//pics.avs.io/99/36/${carrier}.png`}
                     width="100"
                     height="40"
-                    alt="Логотип авиокомпании"
+                    alt="Логотип авиакомпании"
                   />
                 </TicketCarrier>
               </div>

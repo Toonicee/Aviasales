@@ -56,11 +56,4 @@
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "eslint src/ --fix --color",
-      "pre-push": "eslint src/ --fix --color",
-      "...": "..."
-    }
-  }
 }
