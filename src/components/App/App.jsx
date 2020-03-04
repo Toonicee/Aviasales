@@ -33,7 +33,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.services.getTicketsId().then(({ data }) => this.setState({ ticketId: data.searchId }));
-    this.tickets();
+    this.getTicketsInState();
   }
 
   changeTransferHandler = (index, inputValue) => {
@@ -59,7 +59,7 @@ class App extends React.Component {
     this.setState({ filterItems });
   };
 
-  tickets = () => {
+  getTicketsInState = () => {
     const { ticketId } = this.state;
     this.services
       .getAllTickets(ticketId)
@@ -73,9 +73,9 @@ class App extends React.Component {
           ticketsAll: [...ticketsAll, ...tickets],
           loading: false,
         });
-        this.tickets();
+        this.getTicketsInState();
       })
-      .catch(() => this.tickets());
+      .catch(() => this.getTicketsInState());
   };
 
   filterAllTickets = () => {
