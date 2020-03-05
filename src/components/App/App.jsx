@@ -53,7 +53,7 @@ class App extends React.Component {
       }
     });
     const arrayCheckboxTrue = filterItems.filter(({ checked }) => checked);
-    if (arrayCheckboxTrue.length === 4) {
+    if (arrayCheckboxTrue.length === filterItems.length - 1) {
       filterItems[0].checked = true;
     }
     this.setState({ filterItems });
