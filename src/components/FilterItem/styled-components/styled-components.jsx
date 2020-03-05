@@ -13,6 +13,7 @@ const Box = styled.span`
 
 const FilterLabel = styled.label`
   text-align: left;
+  cursor: pointer;
   height: 40px;
   padding: 0 20px;
   font-weight: normal;

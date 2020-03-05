@@ -38,17 +38,17 @@ class App extends React.Component {
 
   changeTransferHandler = (index, inputValue) => {
     const { filterItems } = this.state;
-    filterItems.forEach((item, num) => {
+    filterItems.forEach(item => {
       if (filterItems[0].checked) {
-        filterItems[num].checked = true;
+        filterItems[item.inputValue].checked = true;
       }
-      if (num === index) {
-        filterItems[num].checked = !filterItems[num].checked;
+      if (item.inputValue === index) {
+        filterItems[item.inputValue].checked = !filterItems[item.inputValue].checked;
       }
       if (!filterItems[0].checked && inputValue === 0) {
-        filterItems[num].checked = false;
+        filterItems[item.inputValue].checked = false;
       }
-      if (!filterItems[num].checked) {
+      if (!filterItems[item.inputValue].checked) {
         filterItems[0].checked = false;
       }
     });

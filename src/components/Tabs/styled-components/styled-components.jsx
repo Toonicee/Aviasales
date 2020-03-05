@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const TabsButton = styled.button`
   width: 50%;
+  cursor: pointer;
   display: inline-block;
   font-size: 15px;
   height: 50px;
