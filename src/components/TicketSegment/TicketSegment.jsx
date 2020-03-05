@@ -26,15 +26,15 @@ const TicketSegment = ({ segments }) => {
     const transplant = stops.reduce((acc, item) => `${item} ${acc}`, '');
     const hours = Math.floor(duration / 60);
     const minutes = duration - hours * 60;
-    const newdate = new Date(date);
+    const dateDeparture = new Date(date);
 
-    const departureTime = getNormalTime(newdate.getHours(), newdate.getMinutes());
+    const departureTime = getNormalTime(dateDeparture.getHours(), dateDeparture.getMinutes());
     return (
       <TicketPreviewSegment key={uniqueId()}>
         <TicketPreviewFlight>
           <TicketPreviewLabel>{`${origin} - ${destination}`}</TicketPreviewLabel>
           <TicketPreviewInput>{`${departureTime} - ${calculationOfArrivalTime(
-            newdate,
+            dateDeparture,
             hours,
             minutes
           )}`}</TicketPreviewInput>
