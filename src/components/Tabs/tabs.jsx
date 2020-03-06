@@ -44,12 +44,9 @@ class Tabs extends React.Component {
     );
   }
 }
-Tabs.defaultProps = {
-  sortAllTickets: () => {},
-};
 
 Tabs.propTypes = {
-  sortAllTickets: PropTypes.func,
+  sortAllTickets: PropTypes.func.isRequired,
 };
 
 export default Tabs;

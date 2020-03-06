@@ -45,10 +45,8 @@ const Tickets = ({ tickets }) => {
   );
 };
 
-const areEqual = (prevProps, nextProps) => JSON.stringify(prevProps) === JSON.stringify(nextProps);
-
 Tickets.propTypes = {
   tickets: PropTypes.instanceOf(Array).isRequired,
 };
 
-export default React.memo(Tickets, areEqual);
+export default Tickets;
