@@ -12,7 +12,6 @@ import {
 
 const Tickets = ({ tickets }) => {
   let count = 0;
-  console.log('111');
   return (
     <>
       {tickets.map(({ price, carrier, segments }) => {
