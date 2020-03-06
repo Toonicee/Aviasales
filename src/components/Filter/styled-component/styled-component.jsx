@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const FilterTitle = styled.p`
+const FilterTitle = styled.div`
   font-style: normal;
   margin: 15px 0 0 20px;
   text-align: left;

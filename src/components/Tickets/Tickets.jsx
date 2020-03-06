@@ -1,5 +1,4 @@
 import React from 'react';
-import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
 
 import formattingPrices from '../../helper/formattingPrices';
@@ -11,24 +10,18 @@ import {
   TicketPrice,
 } from './styled-components/styled-components';
 
-const Ticket = ({ tickets }) => {
-  Ticket.defaultProps = {
-    tickets: () => {},
-  };
-
-  Ticket.propTypes = {
-    tickets: PropTypes.func,
-  };
+const Tickets = ({ tickets }) => {
   let count = 0;
+  console.log('111');
   return (
     <>
-      {tickets().map(({ price, carrier, segments }) => {
+      {tickets.map(({ price, carrier, segments }) => {
         count += 1;
         if (count > 5) {
           return null;
         }
         return (
-          <TicketWrapper key={uniqueId()}>
+          <TicketWrapper key={count + 1}>
             <TicketHeader>
               <TicketPrice>
                 <span>{`${formattingPrices(price)} Р`}</span>
@@ -45,7 +38,7 @@ const Ticket = ({ tickets }) => {
                 </TicketCarrier>
               </div>
             </TicketHeader>
-            <TicketSegment key={uniqueId()} segments={segments} />
+            <TicketSegment segments={segments} />
           </TicketWrapper>
         );
       })}
@@ -53,4 +46,10 @@ const Ticket = ({ tickets }) => {
   );
 };
 
-export default Ticket;
+const areEqual = (prevProps, nextProps) => JSON.stringify(prevProps) === JSON.stringify(nextProps);
+
+Tickets.propTypes = {
+  tickets: PropTypes.instanceOf(Array).isRequired,
+};
+
+export default React.memo(Tickets, areEqual);

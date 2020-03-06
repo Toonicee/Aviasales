@@ -4,17 +4,10 @@ import FilterItem from '../FilterItem';
 
 import { FilterWrapper, FilterTitle, FilterList } from './styled-component/styled-component';
 
-const Filter = ({ filterItems, transferChange, filterAllTickets }) => {
-  Filter.defaultProps = {
-    transferChange: () => {},
-    filterAllTickets: () => {},
-    filterItems: [],
-  };
-
+const Filter = ({ filterItems, transferChange }) => {
   Filter.propTypes = {
-    transferChange: PropTypes.func,
-    filterAllTickets: PropTypes.func,
-    filterItems: PropTypes.instanceOf(Array),
+    transferChange: PropTypes.func.isRequired,
+    filterItems: PropTypes.instanceOf(Array).isRequired,
   };
   return (
     <FilterWrapper className="filters__item filter">
@@ -22,15 +15,14 @@ const Filter = ({ filterItems, transferChange, filterAllTickets }) => {
       <div>
         <div>
           <FilterList>
-            {filterItems.map(({ label, id, checked, inputValue }, index) => (
+            {filterItems.map(({ label, id, checked }, index) => (
               <li key={id}>
                 <FilterItem
                   label={label}
                   checked={checked}
                   index={index}
-                  inputValue={inputValue}
+                  id={id}
                   transferChange={transferChange}
-                  filterAllTickets={filterAllTickets}
                 />
               </li>
             ))}

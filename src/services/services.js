@@ -10,7 +10,7 @@ const API_URLS = {
 };
 
 export default class Services {
-  getTicketsId = () => instance.get(API_URLS.SEARCH);
+  static getTicketsId = () => instance.get(API_URLS.SEARCH);
 
-  getAllTickets = id => instance.get(`${API_URLS.TICKETS}${id}`);
+  static getAllTickets = id => instance.get(`${API_URLS.TICKETS}${id}`);
 }

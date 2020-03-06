@@ -2,23 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FilterLabel, Box } from './styled-components/styled-components';
 
-const FilterItem = ({ label, checked, index, inputValue, transferChange, filterAllTickets }) => {
-  FilterItem.defaultProps = {
-    transferChange: () => {},
-    filterAllTickets: () => {},
-    label: '',
-    checked: false,
-    index: 0,
-    inputValue: 0,
-  };
-
+const FilterItem = ({ label, checked, index, id, transferChange }) => {
   FilterItem.propTypes = {
-    transferChange: PropTypes.func,
-    filterAllTickets: PropTypes.func,
-    label: PropTypes.string,
-    checked: PropTypes.bool,
-    index: PropTypes.number,
-    inputValue: PropTypes.number,
+    transferChange: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
+    checked: PropTypes.bool.isRequired,
+    index: PropTypes.number.isRequired,
+    id: PropTypes.number.isRequired,
   };
 
   return (
@@ -27,8 +17,7 @@ const FilterItem = ({ label, checked, index, inputValue, transferChange, filterA
         <input
           type="checkbox"
           onChange={() => {
-            transferChange(index, inputValue);
-            filterAllTickets();
+            transferChange(index, id);
           }}
           checked={checked}
         />

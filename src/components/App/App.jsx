@@ -2,7 +2,7 @@ import React from 'react';
 
 import Filter from '../Filter';
 import Tabs from '../Tabs';
-import Ticket from '../Ticket';
+import Tickets from '../Tickets';
 import Loading from '../Loading';
 import ticketSorting from '../../helper/ticketSorting';
 import Services from '../../services/services';
@@ -12,14 +12,12 @@ import logo from '../../img/Logo.svg';
 
 class App extends React.Component {
   initialStateLabel = [
-    { label: 'Все', id: 'all', inputValue: 0, checked: true },
-    { label: 'Без пересадок', id: 'non-stop', inputValue: 1, checked: true },
-    { label: '1 персадка', id: '1-transplant', inputValue: 2, checked: true },
-    { label: '2 пересадки', id: '2-transplant', inputValue: 3, checked: true },
-    { label: '3 пересадки', id: '3-transplant', inputValue: 4, checked: true },
+    { label: 'Все', id: 0, checked: true },
+    { label: 'Без пересадок', id: 1, checked: true },
+    { label: '1 персадка', id: 2, checked: true },
+    { label: '2 пересадки', id: 3, checked: true },
+    { label: '3 пересадки', id: 4, checked: true },
   ];
-
-  services = new Services();
 
   constructor() {
     super();
@@ -27,42 +25,53 @@ class App extends React.Component {
       ticketsAll: [],
       ticketId: null,
       loading: true,
-      filterItems: [...this.initialStateLabel],
+      filterItems: this.initialStateLabel,
     };
   }
 
   componentDidMount() {
-    this.services.getTicketsId().then(({ data }) => this.setState({ ticketId: data.searchId }));
-    this.getTicketsInState();
+    Services.getTicketsId().then(({ data }) => {
+      this.setState({ ticketId: data.searchId });
+      this.getTicketsInState();
+    });
   }
 
-  changeTransferHandler = (index, inputValue) => {
+  changeTransferHandler = (index, id) => {
     const { filterItems } = this.state;
     filterItems.forEach(item => {
       if (filterItems[0].checked) {
-        filterItems[item.inputValue].checked = true;
+        this.setState({
+          filterItems: (filterItems[item.id].checked = true),
+        });
       }
-      if (item.inputValue === index) {
-        filterItems[item.inputValue].checked = !filterItems[item.inputValue].checked;
+      if (item.id === index) {
+        this.setState({
+          filterItems: (filterItems[item.id].checked = !filterItems[item.id].checked),
+        });
       }
-      if (!filterItems[0].checked && inputValue === 0) {
-        filterItems[item.inputValue].checked = false;
+      if (!filterItems[0].checked && id === 0) {
+        this.setState({
+          filterItems: (filterItems[item.id].checked = false),
+        });
       }
-      if (!filterItems[item.inputValue].checked) {
-        filterItems[0].checked = false;
+      if (!filterItems[item.id].checked) {
+        this.setState({
+          filterItems: (filterItems[0].checked = false),
+        });
       }
     });
     const arrayCheckboxTrue = filterItems.filter(({ checked }) => checked);
     if (arrayCheckboxTrue.length === filterItems.length - 1) {
-      filterItems[0].checked = true;
+      this.setState({
+        filterItems: (filterItems[0].checked = true),
+      });
     }
     this.setState({ filterItems });
   };
 
   getTicketsInState = () => {
     const { ticketId } = this.state;
-    this.services
-      .getAllTickets(ticketId)
+    Services.getAllTickets(ticketId)
       .then(res => {
         if (res.data.stop) {
           return;
@@ -80,9 +89,6 @@ class App extends React.Component {
 
   filterAllTickets = () => {
     const { ticketsAll, filterItems } = this.state;
-    if (filterItems[0].checked) {
-      return ticketsAll;
-    }
     const filteredTicketsList = ticketsAll.filter(
       ticket => filterItems[ticket.segments[0].stops.length + 1].checked
     );
@@ -104,15 +110,11 @@ class App extends React.Component {
           <img src={logo} alt="логотип" />
         </div>
         <div className="sidebar">
-          <Filter
-            filterAllTickets={this.filterAllTickets}
-            transferChange={this.changeTransferHandler}
-            filterItems={filterItems}
-          />
+          <Filter transferChange={this.changeTransferHandler} filterItems={filterItems} />
         </div>
         <div className="main">
           <Tabs sortAllTickets={this.sortAllTickets} />
-          {loading ? <Loading /> : <Ticket tickets={this.filterAllTickets} />}
+          {loading ? <Loading /> : <Tickets tickets={this.filterAllTickets()} />}
         </div>
       </AppWrapper>
     );

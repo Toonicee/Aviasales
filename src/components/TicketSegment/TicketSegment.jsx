@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { uniqueId } from 'lodash';
 
 import transferFormatter from '../../helper/transferFormatter';
 import calculationOfArrivalTime from '../../helper/calculationOfArrivalTime';
@@ -12,12 +11,8 @@ import {
 } from './styled-components/styled-components';
 
 const TicketSegment = ({ segments }) => {
-  TicketSegment.defaultProps = {
-    segments: [],
-  };
-
   TicketSegment.propTypes = {
-    segments: PropTypes.instanceOf(Array),
+    segments: PropTypes.instanceOf(Array).isRequired,
   };
 
   const getNormalTime = (h, min) => `${h}:${min < 10 ? `0${min}` : min}`;
@@ -30,7 +25,7 @@ const TicketSegment = ({ segments }) => {
 
     const departureTime = getNormalTime(dateDeparture.getHours(), dateDeparture.getMinutes());
     return (
-      <TicketPreviewSegment key={uniqueId()}>
+      <TicketPreviewSegment key={date}>
         <TicketPreviewFlight>
           <TicketPreviewLabel>{`${origin} - ${destination}`}</TicketPreviewLabel>
           <TicketPreviewInput>{`${departureTime} - ${calculationOfArrivalTime(
