@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FilterLabel, Box } from './styled-components/styled-components';
 
-const FilterItem = ({ label, checked, index, id, transferChange }) => {
+const FilterItem = ({ label, isChecked, value, handleCheck }) => {
   FilterItem.propTypes = {
-    transferChange: PropTypes.func.isRequired,
+    handleCheck: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
-    checked: PropTypes.bool.isRequired,
-    index: PropTypes.number.isRequired,
-    id: PropTypes.number.isRequired,
+    value: PropTypes.string.isRequired,
+    isChecked: PropTypes.bool.isRequired,
   };
 
   return (
@@ -16,10 +15,11 @@ const FilterItem = ({ label, checked, index, id, transferChange }) => {
       <FilterLabel>
         <input
           type="checkbox"
-          onChange={() => {
-            transferChange(index, id);
+          onChange={e => {
+            handleCheck(e);
           }}
-          checked={checked}
+          checked={isChecked}
+          value={value}
         />
         <Box className="checkbox" />
         {label}

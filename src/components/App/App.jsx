@@ -13,11 +13,10 @@ import logo from '../../img/Logo.svg';
 
 class App extends React.Component {
   initialStateLabel = [
-    { label: 'Все', id: 0, checked: true },
-    { label: 'Без пересадок', id: 1, checked: true },
-    { label: '1 персадка', id: 2, checked: true },
-    { label: '2 пересадки', id: 3, checked: true },
-    { label: '3 пересадки', id: 4, checked: true },
+    { value: 'Без пересадок', id: 1, isChecked: true },
+    { value: '1 персадка', id: 2, isChecked: true },
+    { value: '2 пересадки', id: 3, isChecked: true },
+    { value: '3 пересадки', id: 4, isChecked: true },
   ];
 
   constructor() {
@@ -27,6 +26,7 @@ class App extends React.Component {
       ticketId: null,
       loading: true,
       filterItems: this.initialStateLabel,
+      inputAll: true,
     };
   }
 
@@ -57,27 +57,30 @@ class App extends React.Component {
 
   addIdInTickets = arrTickets => arrTickets.map(item => ({ ...item, id: uniqueId() }));
 
-  changeTransferHandler = (index, id) => {
+  handleAllChecked = ({ target }) => {
+    const { filterItems, inputAll } = this.state;
+    const newFilterItems = [...filterItems];
+    newFilterItems.forEach((item, index) => {
+      newFilterItems[index] = { ...item, isChecked: target.checked };
+    });
+    this.setState({ inputAll: !inputAll });
+    this.setState({ filterItems: newFilterItems });
+  };
+
+  handleCheckChieldElement = ({ target }) => {
     const { filterItems } = this.state;
     const newFilterItems = [...filterItems];
-
-    newFilterItems.forEach(item => {
-      if (newFilterItems[0].checked) {
-        newFilterItems[item.id] = { ...item, checked: true };
-      }
-      if (item.id === index) {
-        newFilterItems[item.id] = { ...item, checked: !item.checked };
-      }
-      if (!newFilterItems[0].checked && id === 0) {
-        newFilterItems[item.id] = { ...item, checked: false };
-      }
-      if (!newFilterItems[item.id].checked) {
-        newFilterItems[0].checked = false;
+    newFilterItems.forEach((item, index) => {
+      if (item.value === target.value) {
+        newFilterItems[index] = { ...item, isChecked: target.checked };
       }
     });
-    const arrayCheckboxTrue = newFilterItems.filter(({ checked }) => checked);
-    if (arrayCheckboxTrue.length === newFilterItems.length - 1) {
-      newFilterItems[0].checked = true;
+    const arrayCheckboxTrue = newFilterItems.filter(({ isChecked }) => isChecked);
+    if (arrayCheckboxTrue.length === filterItems.length - 1) {
+      this.setState({ inputAll: false });
+    }
+    if (arrayCheckboxTrue.length === 4) {
+      this.setState({ inputAll: true });
     }
     this.setState({ filterItems: newFilterItems });
   };
@@ -85,7 +88,7 @@ class App extends React.Component {
   filterAllTickets = () => {
     const { ticketsAll, filterItems } = this.state;
     const filteredTicketsList = ticketsAll.filter(
-      ticket => filterItems[ticket.segments[0].stops.length + 1].checked
+      ticket => filterItems[ticket.segments[0].stops.length].isChecked
     );
     return filteredTicketsList;
   };
@@ -97,7 +100,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { loading, filterItems } = this.state;
+    const { loading, filterItems, inputAll } = this.state;
     return (
       <AppWrapper>
         <GlobalStyle />
@@ -105,7 +108,12 @@ class App extends React.Component {
           <img src={logo} alt="логотип" />
         </div>
         <div className="sidebar">
-          <Filter transferChange={this.changeTransferHandler} filterItems={filterItems} />
+          <Filter
+            handleCheckChieldElement={this.handleCheckChieldElement}
+            handleAllChecked={this.handleAllChecked}
+            filterItems={filterItems}
+            inputAll={inputAll}
+          />
         </div>
         <div className="main">
           <Tabs sortAllTickets={this.sortAllTickets} />

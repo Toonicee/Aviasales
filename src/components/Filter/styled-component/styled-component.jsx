@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const FilterTitle = styled.div`
   font-style: normal;
-  margin: 15px 0 0 20px;
+  margin: 15px 0 11px 20px;
   text-align: left;
   font-weight: 600;
   font-size: 12px;
@@ -20,7 +20,7 @@ const FilterWrapper = styled.div`
 
 const FilterList = styled.ul`
   padding: 0;
-  margin: 10px 0 5px 0;
+  margin: 0 0 5px 0;
   list-style: none;
 `;
 
