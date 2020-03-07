@@ -17,7 +17,7 @@ const Filter = ({ handleCheckChieldElement, filterItems, handleAllChecked, input
       <FilterTitle>Количество пересадок</FilterTitle>
       <div>
         <div>
-          <FilterItem label="Все" handleCheck={handleAllChecked} isChecked={inputAll} />
+          <FilterItem label="Все" value="Все" handleCheck={handleAllChecked} isChecked={inputAll} />
           <FilterList>
             {filterItems.map(({ value, id, isChecked }, index) => (
               <li key={id}>
