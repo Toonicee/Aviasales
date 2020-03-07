@@ -4,7 +4,7 @@ import FilterItem from '../FilterItem';
 
 import { FilterWrapper, FilterTitle, FilterList } from './styled-component/styled-component';
 
-const Filter = ({ filterItems, transferChange }) => {
+const Filter = ({ transferChange, filterItems }) => {
   Filter.propTypes = {
     transferChange: PropTypes.func.isRequired,
     filterItems: PropTypes.instanceOf(Array).isRequired,

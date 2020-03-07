@@ -1,4 +1,5 @@
 import React from 'react';
+import { uniqueId } from 'lodash';
 
 import Filter from '../Filter';
 import Tabs from '../Tabs';
@@ -36,39 +37,6 @@ class App extends React.Component {
     });
   }
 
-  changeTransferHandler = (index, id) => {
-    const { filterItems } = this.state;
-    filterItems.forEach(item => {
-      if (filterItems[0].checked) {
-        this.setState({
-          filterItems: (filterItems[item.id].checked = true),
-        });
-      }
-      if (item.id === index) {
-        this.setState({
-          filterItems: (filterItems[item.id].checked = !filterItems[item.id].checked),
-        });
-      }
-      if (!filterItems[0].checked && id === 0) {
-        this.setState({
-          filterItems: (filterItems[item.id].checked = false),
-        });
-      }
-      if (!filterItems[item.id].checked) {
-        this.setState({
-          filterItems: (filterItems[0].checked = false),
-        });
-      }
-    });
-    const arrayCheckboxTrue = filterItems.filter(({ checked }) => checked);
-    if (arrayCheckboxTrue.length === filterItems.length - 1) {
-      this.setState({
-        filterItems: (filterItems[0].checked = true),
-      });
-    }
-    this.setState({ filterItems });
-  };
-
   getTicketsInState = () => {
     const { ticketId } = this.state;
     Services.getAllTickets(ticketId)
@@ -79,12 +47,39 @@ class App extends React.Component {
         const { tickets } = res.data;
         const { ticketsAll } = this.state;
         this.setState({
-          ticketsAll: [...ticketsAll, ...tickets],
+          ticketsAll: [...ticketsAll, ...this.addIdInTickets(tickets)],
           loading: false,
         });
         this.getTicketsInState();
       })
       .catch(() => this.getTicketsInState());
+  };
+
+  addIdInTickets = arrTickets => arrTickets.map(item => ({ ...item, id: uniqueId() }));
+
+  changeTransferHandler = (index, id) => {
+    const { filterItems } = this.state;
+    const newFilterItems = [...filterItems];
+
+    newFilterItems.forEach(item => {
+      if (newFilterItems[0].checked) {
+        newFilterItems[item.id] = { ...item, checked: true };
+      }
+      if (item.id === index) {
+        newFilterItems[item.id] = { ...item, checked: !item.checked };
+      }
+      if (!newFilterItems[0].checked && id === 0) {
+        newFilterItems[item.id] = { ...item, checked: false };
+      }
+      if (!newFilterItems[item.id].checked) {
+        newFilterItems[0].checked = false;
+      }
+    });
+    const arrayCheckboxTrue = newFilterItems.filter(({ checked }) => checked);
+    if (arrayCheckboxTrue.length === newFilterItems.length - 1) {
+      newFilterItems[0].checked = true;
+    }
+    this.setState({ filterItems: newFilterItems });
   };
 
   filterAllTickets = () => {

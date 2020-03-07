@@ -14,13 +14,13 @@ const Tickets = ({ tickets }) => {
   let count = 0;
   return (
     <>
-      {tickets.map(({ price, carrier, segments }) => {
+      {tickets.map(({ price, carrier, segments, id }) => {
         count += 1;
         if (count > 5) {
           return null;
         }
         return (
-          <TicketWrapper key={count + 1}>
+          <TicketWrapper key={id}>
             <TicketHeader>
               <TicketPrice>
                 <span>{`${formattingPrices(price)} Р`}</span>
